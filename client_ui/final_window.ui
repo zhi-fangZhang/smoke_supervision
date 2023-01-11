@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1183</width>
+    <height>732</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="window_3">
+   <widget class="QChartView" name="graph" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>911</width>
+      <height>681</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="info">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>0</y>
+      <width>261</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
+    <item>
+     <property name="text">
+      <string>个人情况</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>姓名：</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>累计接尘量：</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>预计未来7天接尘量：</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>危险系数：</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPlainTextEdit" name="suggest">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>300</y>
+      <width>261</width>
+      <height>381</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1183</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QWidget</extends>
+   <header location="global">PyQt5.QtChart</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
