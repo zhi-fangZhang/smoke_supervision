@@ -3,10 +3,11 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-10 01:25:25
-LastEditTime: 2023-01-10 14:37:35
+LastEditTime: 2023-01-12 16:58:37
 '''
 import utils
 import beans
+import conf
 
 
 def get_smoke_record(cursor):
@@ -16,7 +17,7 @@ def get_smoke_record(cursor):
     FROM sensor_info NATURAL JOIN sensor_spvs 
     where UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(time)<={}
     ORDER BY sensor_info.id ASC,sensor_info.f_id ASC;
-    '''.format(utils.DETECT_INTERVAL)
+    '''.format(conf.DETECT_INTERVAL)
     return utils.operate(cursor, sql, 'sr')
 
 
@@ -35,7 +36,7 @@ def check_dust(cursor):
     #接尘总量，预期接尘量被动
     sql = '''
     select * from worker_pos where UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(time)<={} ORDER BY id ASC,f_id ASC;
-    '''.format(utils.DETECT_INTERVAL)
+    '''.format(conf.DETECT_INTERVAL)
     miners = utils.operate(cursor, sql, 'sm')
     temp = utils.group_by_key(miners, lambda miner: [miner.f_id, miner.id])
     for lis in temp:
@@ -47,10 +48,9 @@ def check_dust(cursor):
         mi = beans.Miner_insist(id, f_id, former_dust, traj)
         total_dust_now = mi.get_total_dust_now(smoke_record)
         anticipated_dust = mi.get_antipate_dust(smoke_record)
-        total_dust_now = round(total_dust_now, 1)
+        total_dust_now = total_dust_now
         is_danger = int(mi.is_danger(smoke_record))
         # 上传worker_alert数据库
         sql = 'INSERT INTO worker_alert(id,f_id,accumulate_dust,anticipated_dust,is_danger) VALUES ({},{},{},{},{});'.format(
             id, f_id, total_dust_now, anticipated_dust, is_danger)
-        print(sql)
         utils.operate(cursor, sql)

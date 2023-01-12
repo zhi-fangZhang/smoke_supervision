@@ -1,0 +1,21 @@
+'''
+Description: 
+version: 
+Author: Zhang Zhifang
+Date: 2023-01-12 13:31:27
+LastEditTime: 2023-01-12 14:42:08
+'''
+DISTRIBUTION_IP='127.0.0.1'
+LISTEN_PORT=8080
+MAX_LINK=5
+
+USER='root'
+PASSWORD='1234aA'
+HOST_IP='39.108.120.233'
+DATABASE='DUST'
+MYSQL_PORT=3306
+CHARSET='utf8mb4'
+
+EXECUTE_PAUSE=1 #s
+
+

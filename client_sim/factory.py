@@ -3,7 +3,7 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-08 00:26:06
-LastEditTime: 2023-01-10 22:34:55
+LastEditTime: 2023-01-12 14:31:09
 '''
 '''
 Description: 
@@ -12,7 +12,6 @@ Author: Zhang Zhifang
 Date: 2023-01-08 00:26:06
 LastEditTime: 2023-01-08 00:38:48
 '''
-import time
 
 
 class Factory:
@@ -43,11 +42,11 @@ class Factory:
         elif mode == 'w':
             for worker in self.workers:
                 out = out + '/{}&{}&{}'.format(worker.id, worker.x, worker.y)
+        out += '[SPLIT]'
         return out
 
     def update_workers(self):
         for worker in self.workers:
-            worker.print_map(self)
             worker.traj_gen(self)
             return self.encrypt('w')
 

@@ -3,23 +3,22 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-08 00:25:54
-LastEditTime: 2023-01-12 10:36:23
+LastEditTime: 2023-01-12 12:10:16
 '''
 import random
 import configparser
 
-cp = configparser.ConfigParser()
-cp.read('my.ini')
-SMOKE_STANDARD = cp.get('sensor', 'SMOKE_STANDARD')
+import conf
+SMOKE_STANDARD = conf.SMOKE_STANDARD
 
 class Sensor:
 
     stc_standard = SMOKE_STANDARD
 
-    def __init__(self,id, x_ratio, y_ratio):
+    def __init__(self,id, x, y):
         self.id=id
-        self.x_ratio = x_ratio
-        self.y_ratio = y_ratio
+        self.x = x
+        self.y = y
         self.env_gen()  # 初始化 self.concentration, self.temperature, self.humidity
 
 

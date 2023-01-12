@@ -3,10 +3,11 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-10 00:04:21
-LastEditTime: 2023-01-10 14:06:48
+LastEditTime: 2023-01-12 17:01:39
 '''
 
 import math
+import conf
 
 
 class Smoke:
@@ -14,7 +15,7 @@ class Smoke:
         self.f_id = f_id
         self.id = id
         self.time = time
-        self.conc = conc
+        self.content = conc
         self.temp = temp
         self.hum = hum
 
@@ -23,11 +24,11 @@ class Smoke:
     '''
 
     def is_overrich(self):
-        # 计算危险指数
-        self.content = self.conc + self.hum
-        # 判断是否危险
-        return True
-        if not self.id % 2:
+        max_still_conc = conf.SMOKE_STANDARD_CN[
+            'concentration_extreme_range_still'][1]
+        range_temp = conf.SMOKE_STANDARD_CN[
+            'concentration_extreme_range_still']
+        if self.content > max_still_conc or self.content not in [range_temp]:
             return True
         return False
 
@@ -58,32 +59,29 @@ class Miner_insist(Miner):
         self.former_total_dust = former_total_dust
 
     # smoke_record: [(t1,conc1,x1,y1),(t2,conc2,x2,y2)]
-    def get_history_dust_now(self, smoke_record):
+    def get_detected_dust(self, smoke_record):
         # 位置阈值
-        spatial_threshold = 100
         for item in self.traj:
-            f = lambda distance: math.log2(math.sqrt(10 - distance)
-                                           ) if distance < 10 else 0
-            distances = [
-                math.sqrt((item[1] - sr[2])**2 + (item[2] - sr[3])**2)
-                for sr in smoke_record
-            ]
+            f = lambda x: (conf.spatial_threshold * x[1]
+                           ) * conf.INTERVAL_TO_YEAR if x[
+                               0] < conf.spatial_threshold else 0
+            record = [[
+                math.sqrt((item[1] - sr[2])**2 + (item[2] - sr[3])**2), sr[1]
+            ] for sr in smoke_record]
             # 增量
-            return list(map(f, distances))
+            return sum(list(map(f, record)))
 
     def get_total_dust_now(self, smoke_record):
         # 增量+存量
-        return sum(
-            self.get_history_dust_now(smoke_record)) + self.former_total_dust
+        return self.get_detected_dust(smoke_record) + self.former_total_dust
 
     def get_antipate_dust(self, smoke_record):
-        # history = self.get_history_dust_now(
-        #     smoke_record) + self.get_total_dust_now(smoke_record)
-        # 未解决，用数模预测一下！
-        return 1
+        return self.former_total_dust + self.get_total_dust_now(smoke_record)
+        # alternative: polyfit
 
     def is_danger(self, smoke_record):
-        safety_threshhold = 100
-        anti = self.get_antipate_dust(smoke_record)
-        if anti > safety_threshhold: return True
+        anti = self.get_antipate_dust(smoke_record)  #总量
+        acc = self.get_detected_dust(smoke_record)
+        if anti > conf.safety_threshold[0] or acc > conf.safety_threshold[1]:
+            return True
         return False

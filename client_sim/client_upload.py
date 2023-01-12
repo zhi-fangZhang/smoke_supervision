@@ -3,7 +3,7 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-08 00:39:49
-LastEditTime: 2023-01-12 10:33:46
+LastEditTime: 2023-01-12 14:11:02
 '''
 from factory import Factory
 from worker import Worker
@@ -12,16 +12,13 @@ from concurrent.futures import ThreadPoolExecutor
 import threading
 import time
 import socket
-import configparser
+import conf
 
-cp = configparser.ConfigParser()
-cp.read('my.ini')
-SENSOR_INTERVAL = cp.get('simulate', 'SENSOR_INTERVAL')
-WORKER_INTERVAL = cp.get('simulate', 'WORKER_INTERVAL')
-SIMULATE_PAUSE = cp.get('simulate', 'SIMULATE_PAUSE')
-DISTRIBUTION_IP = cp.get('simulate', 'DISTRIBUTION_IP')
-DISTRIBUTION_PORT = cp.get('simulate', 'DISTRIBUTION_PORT')
-
+SENSOR_INTERVAL = conf.SENSOR_INTERVAL
+WORKER_INTERVAL = conf.WORKER_INTERVAL
+SIMULATE_PAUSE = conf.SIMULATE_PAUSE
+DISTRIBUTION_IP = conf.DISTRIBUTION_IP
+DISTRIBUTION_PORT = conf.DISTRIBUTION_PORT
 
 
 class Client_generator(Factory):
@@ -32,10 +29,11 @@ class Client_generator(Factory):
         self.clientSocket.connect((DISTRIBUTION_IP, DISTRIBUTION_PORT))
 
     def send(self, info):
-        lock=threading.Lock()
+        lock = threading.Lock()
         lock.acquire()
         self.clientSocket.send(info.encode('utf-8'))
         lock.release()
+
 
 def simulate(client):
     sensor_interval = SENSOR_INTERVAL
@@ -50,25 +48,3 @@ def simulate(client):
             worker_parse = client.update_workers()
             client.send(worker_parse)
         time.sleep(SIMULATE_PAUSE)
-
-
-if __name__ == '__main__':
-
-    pool = ThreadPoolExecutor(max_workers=100)
-    sim1 = pool.submit(
-        simulate,
-        Client_generator(
-            11, 22, 1,
-            [Sensor(1, 0.3, 0.2), Sensor(2, 0.4, 0.1)],
-            [Worker(1, 1, 1, 3), Worker(2, 2, 2, 4)]))
-    sim2 = pool.submit(
-        simulate,
-        Client_generator(
-            11, 22, 2,
-            [Sensor(3, 0.3, 0.2), Sensor(4, 0.4, 0.1)],
-            [Worker(3, 1, 1, 3), Worker(4, 2, 2, 4)]))
-    # sim3 = pool.submit(simulate, Client_generator(11,22,3,[Sensor(3,0.3,0.2),Sensor(4,0.4,0.1)],[Worker(3,1,1,3),Worker(4,2,2,4)]))
-    # sim4 = pool.submit(simulate, Client_generator(11,22,4,[Sensor(3,0.3,0.2),Sensor(4,0.4,0.1)],[Worker(3,1,1,3),Worker(4,2,2,4)]))
-    # sim5 = pool.submit(simulate, Client_generator(11,22,5,[Sensor(3,0.3,0.2),Sensor(4,0.4,0.1)],[Worker(3,1,1,3),Worker(4,2,2,4)]))
-
-    # pool.shutdown()

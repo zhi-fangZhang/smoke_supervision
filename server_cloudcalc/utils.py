@@ -3,7 +3,7 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-10 01:19:41
-LastEditTime: 2023-01-10 14:35:10
+LastEditTime: 2023-01-12 13:47:33
 '''
 '''
 增 a
@@ -14,18 +14,17 @@ LastEditTime: 2023-01-10 14:35:10
 from beans import Smoke, Miner
 from itertools import groupby
 import pymysql
-
-DETECT_INTERVAL = 30
+import conf
 
 
 def init_dataset():
     conn = pymysql.connect(
-        user='root',
-        password='1234aA',
-        host='39.108.120.233',
-        database='DUST',
-        port=3306,
-        charset='utf8mb4',
+        user=conf.USER,
+        password=conf.PASSWORD,
+        host=conf.HOST_IP,
+        database=conf.DATABASE,
+        port=conf.MYSQL_PORT,
+        charset=conf.CHARSET,
     )
     cursor = conn.cursor()
     cursor.execute('use DUST;')
