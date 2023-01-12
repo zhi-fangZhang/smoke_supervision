@@ -3,7 +3,7 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-12 10:26:44
-LastEditTime: 2023-01-12 17:44:57
+LastEditTime: 2023-01-13 00:54:21
 '''
 
 # 所有距离单位均为m,速度m/WORKER_INTERVAL(s)
@@ -237,3 +237,12 @@ WORKER_INTERVAL = 3 * 60  # 单位s
 SIMULATE_PAUSE = 1  # 单位s
 DISTRIBUTION_IP = '127.0.0.1'
 DISTRIBUTION_PORT = 8080
+
+
+
+USER='root'
+PASSWORD='1234aA'
+HOST_IP='39.108.120.233'
+DATABASE='DUST'
+MYSQL_PORT=3306
+CHARSET='utf8mb4'

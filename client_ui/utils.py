@@ -3,24 +3,24 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-11 01:07:46
-LastEditTime: 2023-01-12 17:38:42
+LastEditTime: 2023-01-13 01:44:46
 '''
 
 import pymysql
 from threading import Thread
 import threading
 import time
-
+import conf
 
 def init_dataset():
     conn = pymysql.connect(
-        user='root',
-        password='1234aA',
-        host='39.108.120.233',
-        database='DUST',
-        port=3306,
-        charset='utf8mb4',
-    )
+            user=conf.USER,
+            password=conf.PASSWORD,
+            host=conf.HOST_IP,
+            database=conf.DATABASE,
+            port=conf.MYSQL_PORT,
+            charset=conf.CHARSET,
+        )
     cursor = conn.cursor()
     cursor.execute('use DUST;')
     return conn, cursor
@@ -47,7 +47,6 @@ class Retriever:
         th.start()
 
 
-    
     def fetch_once(self,sqls,signals,widgets):
         def th():
             self.fetch_now(sqls,signals,widgets)

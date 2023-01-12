@@ -3,7 +3,7 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-10 00:04:21
-LastEditTime: 2023-01-12 17:01:39
+LastEditTime: 2023-01-13 01:39:25
 '''
 
 import math
@@ -18,10 +18,6 @@ class Smoke:
         self.content = conc
         self.temp = temp
         self.hum = hum
-
-    '''
-    待解决！
-    '''
 
     def is_overrich(self):
         max_still_conc = conf.SMOKE_STANDARD_CN[
@@ -71,12 +67,12 @@ class Miner_insist(Miner):
             # 增量
             return sum(list(map(f, record)))
 
-    def get_total_dust_now(self, smoke_record):
+    def get_current_dust(self, smoke_record):
         # 增量+存量
         return self.get_detected_dust(smoke_record) + self.former_total_dust
 
     def get_antipate_dust(self, smoke_record):
-        return self.former_total_dust + self.get_total_dust_now(smoke_record)
+        return self.former_total_dust + self.get_current_dust(smoke_record)
         # alternative: polyfit
 
     def is_danger(self, smoke_record):
