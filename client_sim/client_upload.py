@@ -3,7 +3,7 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2023-01-08 00:39:49
-LastEditTime: 2023-01-10 22:35:36
+LastEditTime: 2023-01-12 10:33:46
 '''
 from factory import Factory
 from worker import Worker
@@ -12,6 +12,16 @@ from concurrent.futures import ThreadPoolExecutor
 import threading
 import time
 import socket
+import configparser
+
+cp = configparser.ConfigParser()
+cp.read('my.ini')
+SENSOR_INTERVAL = cp.get('simulate', 'SENSOR_INTERVAL')
+WORKER_INTERVAL = cp.get('simulate', 'WORKER_INTERVAL')
+SIMULATE_PAUSE = cp.get('simulate', 'SIMULATE_PAUSE')
+DISTRIBUTION_IP = cp.get('simulate', 'DISTRIBUTION_IP')
+DISTRIBUTION_PORT = cp.get('simulate', 'DISTRIBUTION_PORT')
+
 
 
 class Client_generator(Factory):
@@ -19,7 +29,7 @@ class Client_generator(Factory):
         super(Client_generator, self).__init__(x_max, y_max, f_id, sensors,
                                                workers)
         self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.clientSocket.connect(('127.0.0.1', 8080))
+        self.clientSocket.connect((DISTRIBUTION_IP, DISTRIBUTION_PORT))
 
     def send(self, info):
         lock=threading.Lock()
@@ -28,10 +38,8 @@ class Client_generator(Factory):
         lock.release()
 
 def simulate(client):
-    sensor_interval = 5
-    worker_interval = 10
-    # sensor_interval = 5 * 60
-    # worker_interval = 10
+    sensor_interval = SENSOR_INTERVAL
+    worker_interval = WORKER_INTERVAL
     start = int(time.time())
     while True:
         now = int(time.time())
@@ -41,7 +49,7 @@ def simulate(client):
         if not (now - start) % worker_interval:
             worker_parse = client.update_workers()
             client.send(worker_parse)
-        time.sleep(1)
+        time.sleep(SIMULATE_PAUSE)
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ Description:
 version: 
 Author: Zhang Zhifang
 Date: 2022-12-29 14:06:50
-LastEditTime: 2023-01-10 23:30:36
+LastEditTime: 2023-01-12 10:38:21
 '''
 import numpy as np
 import cv2
@@ -49,6 +49,4 @@ class Worker:
                for _ in range((factory.y_max - factory.y_min + 1))]
         map[self.x][self.y] = 255
         img = np.array(map, dtype=np.uint8)
-        # cv2.imshow('frame', img)
-        # cv2.waitKey(200)
         return img
